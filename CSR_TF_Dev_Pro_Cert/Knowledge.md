@@ -4,8 +4,24 @@
 
 # Chap 2. Convolutional Neural Networks in TensorFlow
 ## Using dropout
-The idea behind it is to remove a random number of neurons in your neural network. This works very well for two reasons: The first is that neighboring neurons often end up with similar weights, which can lead to overfitting, so dropping some out at random can remove this. The second is that often a neuron can over-weigh the input from a neuron in the previous layer, and can over specialize as a result. Thus, dropping out can break the neural network out of this potential bad habit! 
+> The idea behind it is to remove a random number of neurons in your neural network. This works very well for two reasons: The first is that neighboring neurons often end up with similar weights, which can lead to overfitting, so dropping some out at random can remove this. The second is that often a neuron can over-weigh the input from a neuron in the previous layer, and can over specialize as a result. Thus, dropping out can break the neural network out of this potential bad habit! 
+## Introducing the Rock-Paper-Scissors dataset
+> Rock Paper Scissors is a dataset containing 2,892 images of diverse hands in Rock/Paper/Scissors poses. It is licensed CC By 2.0 and available for all purposes, but its intent is primarily for learning and research.
+
+> Rock Paper Scissors contains images from a variety of different hands,  from different races, ages, and genders, posed into Rock / Paper or Scissors and labeled as such. 
+
+> These images have all been generated using CGI techniques as an experiment in determining if a CGI-based dataset can be used for classification against real images. Note that all of this data is posed against a white background.
+Each image is 300×300 pixels in 24-bit color
+
+```
+From first principles in understanding how ML works, to using a DNN to do basic computer vision, and then beyond into convolutions.
+
+With convolutions, you then saw how to extract features from an image, and you saw the tools in TensorFlow and Keras to build with convolutions and pooling as well as handling complex, multi-sized images.
+
+Through this, you saw how overfitting can have an impact on your classifiers, and explored some strategies to avoid it, including image augmentation, dropout, transfer learning, and more. To wrap things up, you looked at the considerations in your code to build a model for multi-class classification! 
+```
 # Chap 3. Natural Language Processing in TensorFlow
+[News headlines dataset for sarcasm detection](https://www.kaggle.com/rmisra/news-headlines-dataset-for-sarcasm-detection/home)
 
 # Chap 4. Sequences, Time Series and Prediction
 

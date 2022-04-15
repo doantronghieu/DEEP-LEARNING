@@ -359,8 +359,8 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
 def predict_binary(target_size, model, class_names):
   """
   Args: 
-    target_size (list)  (int)
-    class_names (tuple) (str)
+    target_size (tuple)  (int)
+    class_names (list) (str)
   """
   from google.colab import files
   from keras.preprocessing import image
@@ -386,6 +386,33 @@ def predict_binary(target_size, model, class_names):
           print(f'There is a(n) {class_names[0]} in the image')
       else:
           print(f'There is a(n) {class_names[1]} the in image')
+#=============================================================================#
+def predict_softmax(target_size, model, class_names):
+  """
+  Args: 
+    target_size (tuple)  (int)
+    class_names (list) (str)
+  """
+  from google.colab import files
+  from keras.preprocessing import image
+  
+  uploaded = files.upload()
+
+  for fn in uploaded.keys():
+
+      # Predicting images
+      path = '/content/' + fn
+
+      img = image.load_img(path, target_size=(target_size[0], target_size[1]))
+      img = image.img_to_array(img)
+      img = img / 255
+      img = np.expand_dims(img, axis=0)
+
+      images = np.vstack([img])
+      classes = model.predict(images, batch_size=10)
+      
+      print(fn)
+      print(classes)
 #=============================================================================#
 def get_pred_label(prediction_probabilities, class_names):
     """
