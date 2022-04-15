@@ -11,3 +11,5 @@
 [Stochastic gradient descent](https://en.wikipedia.org/wiki/Stochastic_gradient_descent#RMSProp)
 
 [Machine Learning Glossary](https://developers.google.com/machine-learning/glossary)
+
+[Kaggle Dogs v Cats dataset](https://www.kaggle.com/c/dogs-vs-cats)

@@ -10,9 +10,10 @@ sns.set()
 ### We create a bunch of helpful functions throughout the course.
 ### Storing them here so they're easily accessible.
 
+import imp
 import numpy             as np
 import pandas            as pd
-
+import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score,\
                             recall_score, f1_score, precision_recall_fscore_support, \
                             classification_report    
@@ -20,16 +21,18 @@ from sklearn.metrics import confusion_matrix, accuracy_score, precision_score,\
 import tensorflow        as tf
 import tensorflow.keras  as tfk
 import tensorflow.keras.layers as tfkl
+from tensorflow.keras import layers, optimizers, losses, models
 import tensorflow_hub as hub
 from tensorflow.keras.layers.experimental import  preprocessing as PP
 from tensorflow.keras.utils import plot_model
+from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
-import itertools
-import datetime
-import zipfile
-import os
-import random  
+import itertools, datetime, zipfile, os, random
+
 from colorama import Fore
+from google.colab import files
+from keras.preprocessing import image
+
 #=============================================================================#
 FIG_SIZE = (22, 8)
 IMG_SIZE = 224
@@ -352,6 +355,37 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
   if savefig:
     fig.savefig("confusion_matrix.png")
 #=============================================================================#
+def predict_binary(target_size, model, class_names):
+  """
+  Args: 
+    target_size (list)  (int)
+    class_names (tuple) (str)
+  """
+  from google.colab import files
+  from keras.preprocessing import image
+  
+  uploaded = files.upload()
+
+  for fn in uploaded.keys():
+
+      # Predicting images
+      path = '/content/' + fn
+
+      img = image.load_img(path, target_size=(target_size[0], target_size[1]))
+      img = image.img_to_array(img)
+      img = img / 255
+      img = np.expand_dims(img, axis=0)
+
+      images = np.vstack([img])
+      classes = model.predict(images, batch_size=10)
+      
+      print(classes[0])
+      
+      if (classes[0] > 0.5):
+          print(f'There is a(n) {class_names[0]} in the image')
+      else:
+          print(f'There is a(n) {class_names[1]} the in image')
+#=============================================================================#
 def get_pred_label(prediction_probabilities, class_names):
     """
     - Turns an array of prediction probabilities into a label.
@@ -498,19 +532,22 @@ def plot_most_wrong_predict(test_data, test_dir, y_true, y_pred, preds_probs, cl
       plt.title(f'Actual: {y_true_classname}\nPred: {y_pred_classname}\nProb: {pred_prob:.2f}')
       plt.axis(False)
 #=============================================================================#
-def plot_loss_curves(history):
+def plot_history_curves(history):
   """
-  Plot the validation and training data separately
-  Returns separate loss curves for training and validation metrics.
+  - Retrieve a list of list results on training and test data
+  sets for each training epoch
+  - Plot the validation and training data separately
+  - Returns separate loss curves for training and validation metrics.
 
   Args:
-    history: TensorFlow model History object (see: https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/History)
+    history: TensorFlow model History object
   """ 
   loss         = history.history['loss']
   val_loss     = history.history['val_loss']
   accuracy     = history.history['accuracy']
   val_accuracy = history.history['val_accuracy']
-  epochs       = range(len(history.history['loss']))
+  
+  epochs       = range(len(history.history['loss'])) # Get number of epochs
 
   plt.figure(figsize=(22, 8))
   
@@ -518,7 +555,7 @@ def plot_loss_curves(history):
   plt.subplot(1, 2, 1)
   plt.plot(epochs, loss,     label='Training Loss')
   plt.plot(epochs, val_loss, label='Validation Loss')
-  plt.title('Loss')
+  plt.title('Training and validation Loss')
   plt.xlabel('Epochs')
   plt.legend()
 
@@ -526,7 +563,7 @@ def plot_loss_curves(history):
   plt.subplot(1, 2, 2)
   plt.plot(epochs, accuracy,     label='Training Accuracy')
   plt.plot(epochs, val_accuracy, label='Validation Accuracy')
-  plt.title('Accuracy')
+  plt.title('Training and validation accuracy')
   plt.xlabel('Epochs')
   plt.legend();
 #=============================================================================#
@@ -649,7 +686,65 @@ def plot_roc_curve(fpr, tpr):
     plt.legend()
     plt.show()
 #=============================================================================#
+def visualize_intermediate_layers_binary(train_class_dirs, train_class_names,
+                                         target_size, model):
+    """
+    Args: 
+        train_class_dirs  (list)
+        train_class_names (list)
+    """
+    #   Define a new Model that will take an image as input, and will output
+    # intermediate representations for all layers in the previous model
+    successive_outputs = [layer.output for layer in model.layers]
+    visualization_model = models.Model(inputs=model.input,
+                                       outputs=successive_outputs)
 
+    # Prepare a random input image from the training set.
+    class0_img_files = [os.path.join(train_class_dirs[0], fn) for fn in train_class_names[0]]
+    class1_img_files = [os.path.join(train_class_dirs[1], fn) for fn in train_class_names[1]]
+
+    img_path = random.choice(class0_img_files + class1_img_files)
+    img = load_img(img_path, target_size=(target_size[0], target_size[1])) # This is a PIL image
+    x = img_to_array(img)         # Numpy array with shape (target_size, 3)
+    x = x.reshape((1,) + x.shape) # Numpy array with shape (1, target_size, 3)
+    x = x / 255.0 # Scale by 1 / 255
+
+    #   Run the image through the network, thus obtaining all intermediate
+    # representations for this image
+    successive_feature_maps = visualization_model.predict(x)
+
+    # These are the names of the layers, so we can have them as part of the plot
+    layer_names = [layer.name for layer in model.layers]
+
+    # Display the representations
+    for layer_name, feature_map in zip(layer_names, successive_feature_maps):
+        # Just do this for the conv/maxpool layers, not the fully-connected layers
+        if (len(feature_map.shape) == 4):
+            
+            n_features = feature_map.shape[-1] # Number of features in feature map
+            size       = feature_map.shape[1]  # The feature map has shape (1, size, size, n_features)
+
+            # Tile the images in this matrix
+            display_grid = np.zeros((size, size * n_features))
+
+            # Postprocess the feature to be visually palatable
+            for i in range(n_features):
+                x = feature_map[0, :, :, i]
+                x -= x.mean()
+                x /= x.std()
+                x *= 64
+                x += 128
+                x = np.clip(x, 0, 255).astype('uint8')
+
+                # Tile each filter into this big horizontal grid
+                display_grid[:, i * size : (i + 1) * size] = x
+
+            # Display the grid
+            scale = 20. / n_features
+            plt.figure(figsize=(scale * n_features, scale))
+            plt.title(layer_name)
+            plt.grid(False)
+            plt.imshow(display_grid, aspect='auto', cmap='viridis');
 #=============================================================================#
 
 #=============================================================================#
