@@ -1,10 +1,11 @@
 """
-!wget https://raw.githubusercontent.com/tronghieu2810/DEEP-LEARNING/main/helper_DL.py
+!wget https://raw.githubusercontent.com/doantronghieu/DEEP-LEARNING/main/helper_DL.py
 !pip install colorama
 import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size':15})
 import seaborn           as sns
 sns.set()
+import helper_DL as helper
 """
 
 ### We create a bunch of helpful functions throughout the course.
