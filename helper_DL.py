@@ -566,7 +566,10 @@ def plot_history_curves(history):
   plt.plot(epochs, val_accuracy, label='Validation Accuracy')
   plt.title('Training and validation accuracy')
   plt.xlabel('Epochs')
-  plt.legend();
+  plt.legend()
+  
+  plt.tight_layout()
+  plt.show()
 #=============================================================================#
 def compare_histories(original_history, new_history, initial_epochs=5):
     """
