@@ -23,6 +23,16 @@ Through this, you saw how overfitting can have an impact on your classifiers, an
 # Chap 3. Natural Language Processing in TensorFlow
 [News headlines dataset for sarcasm detection](https://www.kaggle.com/rmisra/news-headlines-dataset-for-sarcasm-detection/home)
 
+[Subwords text encoder](https://www.tensorflow.org/datasets/api_docs/python/tfds/deprecated/text/SubwordTextEncoder)
+
+> Here are the key takeaways for this week:
+>> You looked at taking your tokenized words and passing them to an Embedding layer.
+
+>> Embeddings map your vocabulary to vectors in higher-dimensional space. 
+
+>> The semantics of the words were learned when those words were labeled with similar meanings. For example, when looking at movie reviews, those movies with positive sentiment had the dimensionality of their words ending up pointing a particular way, and those with negative sentiment pointing in a different direction. From these, the words in future reviews could have their direction established and your model can infer the sentiment from it. 
+
+>> You then looked at subword tokenization and saw that not only do the meanings of the words matter but also the sequence in which they are found. 
 # Chap 4. Sequences, Time Series and Prediction
 
 
@@ -44,3 +54,5 @@ Through this, you saw how overfitting can have an impact on your classifiers, an
 [Kaggle Dogs v Cats dataset](https://www.kaggle.com/c/dogs-vs-cats)
 
 [Transfer learning and fine-tuning](https://www.tensorflow.org/tutorials/images/transfer_learning)
+
+[Tensorflow Dataset](https://www.tensorflow.org/datasets/catalog/overview)
