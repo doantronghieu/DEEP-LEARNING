@@ -572,45 +572,29 @@ def plot_history_curves(history):
   """ 
     
   loss         = history.history['loss']
+  val_loss     = history.history['val_loss']
   accuracy     = history.history['accuracy']
+  val_accuracy = history.history['val_accuracy']
   
   epochs       = range(len(history.history['loss'])) # Get number of epochs
 
   plt.figure(figsize=(22, 8))
   
-  if (history.history['val_loss'] is None and history.history['val_accuracy'] is None):
-    # Plot loss
-    plt.subplot(1, 2, 1)
-    plt.plot(epochs, loss,     label='Training Loss')
-    plt.title('Training Loss')
-    plt.xlabel('Epochs')
-    plt.legend()
+  # Plot loss
+  plt.subplot(1, 2, 1)
+  plt.plot(epochs, loss,     label='Training Loss')
+  plt.plot(epochs, val_loss, label='Validation Loss')
+  plt.title('Training and validation Loss')
+  plt.xlabel('Epochs')
+  plt.legend()
 
-    # Plot accuracy
-    plt.subplot(1, 2, 2)
-    plt.plot(epochs, accuracy,     label='Training Accuracy')
-    plt.title('Training accuracy')
-    plt.xlabel('Epochs')
-    plt.legend()
-  else:
-    val_loss     = history.history['val_loss']
-    val_accuracy = history.history['val_accuracy']
-    
-    # Plot loss
-    plt.subplot(1, 2, 1)
-    plt.plot(epochs, loss,     label='Training Loss')
-    plt.plot(epochs, val_loss, label='Validation Loss')
-    plt.title('Training and validation Loss')
-    plt.xlabel('Epochs')
-    plt.legend()
-
-    # Plot accuracy
-    plt.subplot(1, 2, 2)
-    plt.plot(epochs, accuracy,     label='Training Accuracy')
-    plt.plot(epochs, val_accuracy, label='Validation Accuracy')
-    plt.title('Training and validation accuracy')
-    plt.xlabel('Epochs')
-    plt.legend()
+  # Plot accuracy
+  plt.subplot(1, 2, 2)
+  plt.plot(epochs, accuracy,     label='Training Accuracy')
+  plt.plot(epochs, val_accuracy, label='Validation Accuracy')
+  plt.title('Training and validation accuracy')
+  plt.xlabel('Epochs')
+  plt.legend()
   
   plt.tight_layout()
   plt.show()
