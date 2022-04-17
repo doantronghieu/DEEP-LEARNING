@@ -572,9 +572,7 @@ def plot_history_curves(history):
   """ 
     
   loss         = history.history['loss']
-  val_loss     = history.history['val_loss']
   accuracy     = history.history['accuracy']
-  val_accuracy = history.history['val_accuracy']
   
   epochs       = range(len(history.history['loss'])) # Get number of epochs
 
@@ -595,6 +593,9 @@ def plot_history_curves(history):
     plt.xlabel('Epochs')
     plt.legend()
   else:
+    val_loss     = history.history['val_loss']
+    val_accuracy = history.history['val_accuracy']
+    
     # Plot loss
     plt.subplot(1, 2, 1)
     plt.plot(epochs, loss,     label='Training Loss')
