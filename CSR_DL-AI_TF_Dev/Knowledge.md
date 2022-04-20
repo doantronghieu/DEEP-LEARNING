@@ -50,6 +50,8 @@ Through this, you saw how overfitting can have an impact on your classifiers, an
 
 [Losses](https://gombru.github.io/2018/05/23/cross_entropy_loss/)
 
+[Huber Loss](https://en.wikipedia.org/wiki/Huber_loss)
+
 [Stochastic gradient descent](https://en.wikipedia.org/wiki/Stochastic_gradient_descent#RMSProp)
 
 [Machine Learning Glossary](https://developers.google.com/machine-learning/glossary)
