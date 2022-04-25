@@ -13,8 +13,10 @@ import helper_DL as helper
 
 import imp
 import numpy             as np
+np.set_printoptions(precision=3)
 import pandas            as pd
 import matplotlib.pyplot as plt
+%matplotlib widget
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score,\
                             recall_score, f1_score, precision_recall_fscore_support, \
                             classification_report    
